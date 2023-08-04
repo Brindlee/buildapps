@@ -46,6 +46,7 @@ export default {
                 codeStore.fileExplorerRerenderKey +=1;
             }
             codeStore.selectedObject = fName;
+            console.log('response: ',response);
             return response.data;
         } catch (error) {
             console.error(error);
@@ -58,8 +59,12 @@ export default {
                 selectedObject : codeStore.selectedObject,
             }
             const response = await axios.post(url,JSON.stringify(objectDetails))
-            console.log(response);
-            return response.data;
+            console.log('response data type: ',typeof response.data);
+            let respData = response.data;
+            if( typeof response.data == 'object' ) {
+                respData = JSON.stringify(response.data);
+            }
+            return respData;
         } catch (error) {
             console.error(error);
         }

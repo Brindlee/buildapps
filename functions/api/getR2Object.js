@@ -25,6 +25,7 @@ export async function onRequestPost({request, env}) {
 	const reqbody = await request.json()
 	try {
 	  const resp = await getData(reqbody,env);
+	  console.log('resp: ', typeof resp);
 	  return new Response( await resp.text() );
 	} catch (e) {
 	  //wrap your error object and send it
