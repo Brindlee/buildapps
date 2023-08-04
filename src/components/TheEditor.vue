@@ -22,7 +22,7 @@ function deployWorkerToCloudeflare() {
 function saveFileToR2() {
     console.log()
     if( codeStore.name == '' ) {
-        alert('provide file name');
+        alert('Provide file name');
     } else {
         editorAPI.saveFileToR2().then((data) => {
             console.log('response: ',data);
