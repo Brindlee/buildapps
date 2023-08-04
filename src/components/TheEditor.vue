@@ -5,11 +5,11 @@ import editorAPI from '@/js/editorAPI.js'
 import { VAceEditor } from 'vue3-ace-editor';
 import ace from 'ace-builds';
 
-/*import modeJavascriptUrl from 'ace-builds/src-noconflict/mode-javascript?url';
+import modeJavascriptUrl from 'ace-builds/src-noconflict/mode-javascript?url';
 ace.config.setModuleUrl('ace/mode/javascript', modeJavascriptUrl);
 
 import themeChromeUrl from 'ace-builds/src-noconflict/theme-chrome?url';
-ace.config.setModuleUrl('ace/theme/chrome', themeChromeUrl);*/
+ace.config.setModuleUrl('ace/theme/monokai', themeChromeUrl);
 
 const codeStore = useCodeStore(pinia);
 function deployWorkerToCloudeflare() {
@@ -27,16 +27,11 @@ function saveFileToR2() {
         editorAPI.saveFileToR2().then((data) => {
             console.log('response: ',data);
             //loaderStore.hideLoader();
+            
         });
     }
 }
 function previewApp() {
-    /*codeStore.selectedFile = 'vuestandaloneapp/index.html'
-    editorAPI.getR2Object().then((data) => {
-        console.log('response: ',data);
-        codeStore.code = data;
-        //loaderStore.hideLoader();
-    });*/
     window.open("https://worker-r2.integrately.workers.dev/vuestandaloneapp/index.html#/", "_blank");
    
 }
@@ -44,12 +39,19 @@ function previewApp() {
 function editorInit() {
     console.log('editor init');
 }
+function newFile() {
+    codeStore.name = "";
+    codeStore.code = "";
+    codeStore.nameDisabled = false;
+    codeStore.selectedObject = "";
+}
 </script>
 <template>
     <!--<button @click="deployWorkerToCloudeflare">Deploy</button>-->
+    <button @click="newFile">New</button>
     <button @click="saveFileToR2">Save</button>
     <button @click="previewApp">Preview App</button>
-    <input v-model="codeStore.name" placeholder="Type File Name" />
+    <input v-model="codeStore.name" placeholder="Type File Name" :disabled="codeStore.nameDisabled" />
     <!--<textarea v-model="codeStore.code"></textarea>-->
     <VAceEditor
     v-model:value="codeStore.code"

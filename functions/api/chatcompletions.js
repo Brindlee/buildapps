@@ -23,7 +23,7 @@ const getData = async (data,env) => {
 
 export async function onRequestPost({request, env}) {
 	const reqbody = await request.json()
-    var reqData = JSON.stringify({model:reqbody.model, messages : reqbody.messages});
+    var reqData = JSON.stringify({model:reqbody.model, messages : reqbody.messages, temperature : 0});
 	try {
 	  const resp = await getData(reqData,env);
 	  return new Response( JSON.stringify(await resp.json()));

@@ -27,12 +27,25 @@ export default {
     saveFileToR2 : async function saveFileToR2() {
         var url = '/api/saveFileToR2'
         try {
-            const blob = new Blob([codeStore.code], {type : "application/javascript+module"})
+            /*const blob = new Blob([codeStore.code], {type : "application/javascript+module"})
             const formDt = new FormData();
             formDt.append('file', blob, codeStore.name+".js")
             //formDt.append("filename", codeStore.name+".js")
             const response = await axios.put(url,formDt)
             console.log(response);
+            return response.data;*/
+            var fName = codeStore.name;
+            if( !fName.includes('/') ) {
+                fName = 'vuestandaloneapp/files/'+fName;
+            }
+            var data = { content : codeStore.code, fileName : fName };
+            //, {headers: { "Content-Type": 'application/json' }
+            const response = await axios.put(url,data);
+            var fname = codeStore.name;
+            if( fname.indexOf('/') == -1 ) {
+                codeStore.fileExplorerRerenderKey +=1;
+            }
+            codeStore.selectedObject = fName;
             return response.data;
         } catch (error) {
             console.error(error);
@@ -41,10 +54,10 @@ export default {
     getR2Object : async function getR2Object() {
         var url = '/api/getR2Object'
         try {
-            var fileDetails = {
-                selectedFile : codeStore.selectedFile,
+            var objectDetails = {
+                selectedObject : codeStore.selectedObject,
             }
-            const response = await axios.post(url,JSON.stringify(fileDetails))
+            const response = await axios.post(url,JSON.stringify(objectDetails))
             console.log(response);
             return response.data;
         } catch (error) {
@@ -61,8 +74,8 @@ export default {
                 signatureVersion: 'v4'
             });*/
             const response = await axios.post(url,JSON.stringify({}));
-
-            return response;
+            //add try catch
+            return response.data;
         
         
     }

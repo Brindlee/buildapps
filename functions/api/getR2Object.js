@@ -1,7 +1,7 @@
 const getData = async (data,env) => {
 	console.log('req body', data);
 	console.log('env', env.ENVIRONMENT);
-    const url = 'https://worker-r2.integrately.workers.dev/'+data.selectedFile;
+    const url = 'https://worker-r2.integrately.workers.dev/'+data.selectedObject;
 	const options = {
 	  method: "GET"
 	  

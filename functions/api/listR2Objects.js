@@ -18,7 +18,7 @@ export async function onRequestPost({request, env}) {
 			},
 		  });
 		  //return new Response('hi there');
-		return new Response( await S3.send(new ListObjectsV2Command({ Bucket: 'abhishek' })) )
+		return new Response( JSON.stringify(await S3.send(new ListObjectsV2Command({ Bucket: 'abhishek' })) ))
 	} catch (e) {
 	  //wrap your error object and send it
 	  console.log("error: ", e);

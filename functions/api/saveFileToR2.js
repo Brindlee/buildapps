@@ -1,13 +1,13 @@
-const getData = async (data,env) => {
-	console.log('req body', data);
-	console.log('env cf account key', env.R2_AUTH_KEY_SECRET);
-    var filename = 'test.js';
-    for (var pair of data.entries()) {
-        if( pair[0] == 'filename' ) {
-            filename =  pair[1];
-        }
-    }
-    const url = 'https://worker-r2.integrately.workers.dev/vuestandaloneapp/files/'+filename; //todo : file name dynamic
+export async function onRequestPut({request, env}) {
+	let reqBody = await request.json();
+	console.log('reqBody: ', reqBody);
+	
+	console.log('filename: ', reqBody.fileName);
+	const url = 'https://worker-r2.integrately.workers.dev/'+reqBody.fileName; //todo : file name dynamic
+	/*var newRequest = new Request( url,request );
+	//newRequest.url = url;
+	newRequest.headers.append( "X-Custom-Auth-Key", `${env.R2_AUTH_KEY_SECRET}` );
+	return fetch( newRequest );*/
 	const options = {
 	  method: "PUT",
 	  
@@ -15,7 +15,7 @@ const getData = async (data,env) => {
 		//"Content-Type": "multipart/form-data",
         "X-Custom-Auth-Key" : `${env.R2_AUTH_KEY_SECRET}`
 	  },
-	  body: data
+	  body: JSON.stringify(reqBody)
 	};
   
 	try {
@@ -24,22 +24,5 @@ const getData = async (data,env) => {
 	  return result;
 	} catch (e) {
 	  console.log(e);
-	}
-}
-
-export async function onRequestPut({request, env}) {
-	//const reqbody = await request.json()
-    const reqbody =  await request.formData();
-    //var reqData = JSON.stringify({model:reqbody.model, messages : reqbody.messages});
-	//var reqData = JSON.stringify( reqbody );
-    try {
-	  //const resp = await getData(reqData,env);
-      const resp = await getData(reqbody,env);
-      
-	  //return new Response( JSON.stringify(await resp.json()));
-	  return new Response( JSON.stringify(await resp.text()));
-	} catch (e) {
-	  //wrap your error object and send it
-	  console.log("error: ", e);
 	}
 }
