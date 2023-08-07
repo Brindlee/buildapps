@@ -71,17 +71,19 @@ export default {
     },
     listR2Objects : async function getR2File() {
         var url = '/api/listR2Objects';
-       
-            /*const s3 = new S3({
-                endpoint: `https://${import.meta.env.VITE_R2_ACCOUNT_KEY}.r2.cloudflarestorage.com`,
-                accessKeyId: `${import.meta.env.VITE_R2_AUTH_KEY_ID}`,
-                secretAccessKey: `${import.meta.env.VITE_R2_AUTH_KEY_SECRET}`,
-                signatureVersion: 'v4'
-            });*/
-            const response = await axios.post(url,JSON.stringify({}));
-            //add try catch
-            return response.data;
-        
-        
+        const response = await axios.post(url,JSON.stringify({}));
+        //add try catch
+        return response.data;
+    },
+    deleteR2Object : async function( key ) {
+        var url = '/api/deleteR2Object';
+        var data = {
+            bucket : 'abhishek',
+            key : key
+        }
+        const response = await axios.post(url,JSON.stringify(data));
+        //add try catch
+        return response.data;
     }
+    
 }

@@ -8,8 +8,8 @@ import ace from 'ace-builds';
 import modeJavascriptUrl from 'ace-builds/src-noconflict/mode-javascript?url';
 ace.config.setModuleUrl('ace/mode/javascript', modeJavascriptUrl);
 
-import themeChromeUrl from 'ace-builds/src-noconflict/theme-chrome?url';
-ace.config.setModuleUrl('ace/theme/monokai', themeChromeUrl);
+import themeMonokaiUrl from 'ace-builds/src-noconflict/theme-monokai?url';
+ace.config.setModuleUrl('ace/theme/monokai', themeMonokaiUrl);
 
 const codeStore = useCodeStore(pinia);
 function deployWorkerToCloudeflare() {
@@ -40,10 +40,8 @@ function editorInit() {
     console.log('editor init');
 }
 function newFile() {
-    codeStore.name = "";
-    codeStore.code = "";
-    codeStore.nameDisabled = false;
-    codeStore.selectedObject = "";
+    editorAPI.newFile();
+    
 }
 </script>
 <template>
@@ -56,7 +54,6 @@ function newFile() {
     <VAceEditor
     v-model:value="codeStore.code"
     @init="editorInit"
-    lang="javascrpt"
-    theme="chrome"
-    style="height: 300px" />
+    lang="javascript"
+    theme="monokai"/>
 </template>

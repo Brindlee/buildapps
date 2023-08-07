@@ -3,7 +3,9 @@ import { ref } from 'vue'
 import pinia from '@/stores/store.js'
 import { useCodeStore } from '@/stores/code'
 import editorAPI from '@/js/editorAPI.js'
+import editorHelper from '@/js/editorHelper.js'
 import { onMounted } from 'vue'
+import { _ } from 'vue-underscore'
 
 const codeStore = useCodeStore(pinia)
 let r2Objects = ref([])
@@ -14,13 +16,42 @@ onMounted(() => {
   })
 })
 function getR2ObjectData(key) {
-  codeStore.selectedObject = key
-  editorAPI.getR2Object().then((r2ObjectText) => {
-    //console.log('r2ObjectText: ', r2ObjectText)
-    codeStore.setCode(r2ObjectText)
-    codeStore.name = key
-    codeStore.nameDisabled = true
-  })
+  editorHelper.getR2ObjectData(key)
+  var keyArr = key.split('/')
+  if (keyArr.length > 0 && keyArr[keyArr.length - 1].includes('.')) {
+    codeStore.openFiles.push({
+      filename: keyArr[keyArr.length - 1],
+      path: key
+    })
+  }
+}
+function deleteR2Object(key) {
+  console.log('key to delete: ', key)
+  var filesNotToBeDeleted = [ 'index.html', 'main.js', 'menue.js', 'routeconfig.json' ];
+  var keyArr = key.split('/')
+  if (keyArr.length > 0 && keyArr[keyArr.length - 1].includes('.')) {
+    let filename = keyArr[keyArr.length - 1];
+    if( filesNotToBeDeleted.includes( filename ) ) {
+      alert('This file is not allowed to be deleted');
+      return;
+    }
+  }
+  if ( _.findIndex(codeStore.openFiles, function (openFile) {return openFile.path == key}) != -1 ) {
+    if (confirm('This file is open in editor. Any unsaved changes may be lost. Do you want to delete?') == true) {
+      //alert('deleting file');
+      editorAPI.deleteR2Object( key ).then( function( deleteResp ) {
+        console.log('deleteResp: ', deleteResp);
+        editorHelper.closeEditorTab( key );
+        codeStore.fileExplorerRerenderKey +=1;
+      } )
+    } 
+  }else {
+    //alert('deleting file');
+    editorAPI.deleteR2Object( key ).then( function( deleteResp ) {
+      console.log('deleteResp: ', deleteResp);
+      codeStore.fileExplorerRerenderKey +=1;
+    } )
+  }
 }
 </script>
 <template>
@@ -31,7 +62,14 @@ function getR2ObjectData(key) {
   <div class="vdEditorFolderContainer">
     <template v-for="r2Object in r2Objects">
       <div class="vdEditorFolderItemWrap">
-        <div :class="r2Object.Key == codeStore.selectedObject ? 'vdEditorFolderItem active' : 'vdEditorFolderItem'" > <!--active class here-->
+        <div
+          :class="
+            r2Object.Key == codeStore.selectedObject
+              ? 'vdEditorFolderItem active'
+              : 'vdEditorFolderItem'
+          "
+        >
+          <!--active class here-->
           <div class="vdEditorFolderIcon">
             <svg
               width="20"
@@ -59,7 +97,9 @@ function getR2ObjectData(key) {
               </g>
             </svg>
           </div>
-          <div class="vdEditorFolderText" @click="getR2ObjectData(r2Object.Key)">{{ r2Object.Key }}</div>
+          <div class="vdEditorFolderText" @click="getR2ObjectData(r2Object.Key)">
+            {{ r2Object.Key }}
+          </div>
           <div class="vdEditorFolderOptions">
             <svg
               width="20"
@@ -87,10 +127,10 @@ function getR2ObjectData(key) {
               </g>
             </svg>
             <div class="vdEditorFolderOptionDropdown">
-              <div class="vdEditorFolderOptionDropdownItem">Cut</div>
-              <div class="vdEditorFolderOptionDropdownItem">Copy</div>
               <div class="vdEditorFolderOptionDropdownItem">Rename</div>
-              <div class="vdEditorFolderOptionDropdownItem">Delete</div>
+              <div class="vdEditorFolderOptionDropdownItem" @click="deleteR2Object(r2Object.Key)">
+                Delete
+              </div>
             </div>
           </div>
         </div>
