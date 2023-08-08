@@ -52,11 +52,40 @@ export default {
             console.error(error);
         }
     },
+    saveFileToR2WithKey : async function( key, text ) {
+        var url = '/api/saveFileToR2'
+        try {
+            var data = { content : text, fileName : key };
+            const response = await axios.put(url,data);
+
+            console.log('response: ',response);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    },
     getR2Object : async function getR2Object() {
         var url = '/api/getR2Object'
         try {
             var objectDetails = {
                 selectedObject : codeStore.selectedObject,
+            }
+            const response = await axios.post(url,JSON.stringify(objectDetails))
+            console.log('response data type: ',typeof response.data);
+            let respData = response.data;
+            if( typeof response.data == 'object' ) {
+                respData = JSON.stringify(response.data);
+            }
+            return respData;
+        } catch (error) {
+            console.error(error);
+        }
+    },
+    getR2ObjectWithKey : async function getR2Object( key ) {
+        var url = '/api/getR2Object'
+        try {
+            var objectDetails = {
+                selectedObject : key,
             }
             const response = await axios.post(url,JSON.stringify(objectDetails))
             console.log('response data type: ',typeof response.data);

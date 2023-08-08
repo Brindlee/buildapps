@@ -9,6 +9,7 @@ import modeJavascriptUrl from 'ace-builds/src-noconflict/mode-javascript?url';
 ace.config.setModuleUrl('ace/mode/javascript', modeJavascriptUrl);
 
 import themeMonokaiUrl from 'ace-builds/src-noconflict/theme-monokai?url';
+import editorHelper from "../js/editorHelper";
 ace.config.setModuleUrl('ace/theme/monokai', themeMonokaiUrl);
 
 const codeStore = useCodeStore(pinia);
@@ -40,7 +41,7 @@ function editorInit() {
     console.log('editor init');
 }
 function newFile() {
-    editorAPI.newFile();
+    editorHelper.newFile();
     
 }
 </script>
