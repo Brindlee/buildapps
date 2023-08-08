@@ -28,7 +28,7 @@ function saveFileToR2() {
         editorAPI.saveFileToR2().then((data) => {
             console.log('response: ',data);
             //loaderStore.hideLoader();
-            
+            alert('File saved successfully!');
         });
     }
 }
