@@ -9,6 +9,8 @@
     const props = defineProps(['objectkey', 'objectvalue'])
     const codeStore = useCodeStore(pinia)
 
+    //const emit = defineEmits(['onAddToMenuConfig']);
+
     function getR2ObjectData(key) {
         console.log( 'key: ', key );
         editorHelper.getR2ObjectData(key)
@@ -55,8 +57,39 @@
         }
     }
     function addToMenuConfig( key ) {
-        let data = { operation : 'add' };
-        editorHelper.updateConfig( key, data );
+        /*let data = {  operation : 'add' };
+        editorHelper.updateConfig( key, data );*/
+        
+        /*let data = { key : key, operation : 'add' };
+        console.log('before emit');
+        emit('onAddToMenuConfig', data );
+        console.log('after emit');*/
+
+
+        editorAPI.getR2ObjectWithKey( 'vuestandaloneapp/routeconfig.json' ).then((r2ObjectText) => {
+          console.log('typeof r2ObjectText: ', r2ObjectText);
+          let routes = [];
+          if( r2ObjectText != '' && editorHelper.isJSON( r2ObjectText )  ) {
+              routes = JSON.parse( r2ObjectText )
+          }
+          
+          console.log( 'routes: ', routes );
+          let keyArr = key.split('/');
+          if( keyArr.length > 1 ) {
+              let fname = keyArr[keyArr.length-1];
+              let routeIdx = _.findIndex(routes, function(route) { return route.fileUrl.includes( fname ) });
+              console.log( 'routeIdx: ', routeIdx );
+              if( routeIdx == -1 ) {
+                codeStore.displayMenuDetailsModal = true;
+                codeStore.addToMenuDetails = { key : key, operation : 'add' };
+              } else {
+                alert('Menu already exists!');
+              }
+            }
+        });
+
+
+        
     }
     function removeFromMenuConfig( key ) {
         let data = { operation : 'delete' };
@@ -158,9 +191,7 @@
     <template v-if="!props.objectkey.includes('.')">
         <div class="vdEditorFolderItemWrap">
         <template v-for="(value, key) in objectvalue">
-            
-                <FolderItem :objectkey="key" :objectvalue="value" />
-            
+          <FolderItem :objectkey="key" :objectvalue="value" />
         </template>
         </div>
     </template>

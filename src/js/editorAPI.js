@@ -74,7 +74,7 @@ export default {
             console.log('response data type: ',typeof response.data);
             let respData = response.data;
             if( typeof response.data == 'object' ) {
-                respData = JSON.stringify(response.data);
+                respData = JSON.stringify(response.data, null, 2);
             }
             return respData;
         } catch (error) {

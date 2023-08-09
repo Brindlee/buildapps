@@ -2,7 +2,8 @@
 import pinia from "@/stores/store.js";
 import {useCodeStore} from '@/stores/code'
 import editorAPI from '@/js/editorAPI.js'
-import { VAceEditor } from 'vue3-ace-editor';
+import {ref} from 'vue'
+/*import { VAceEditor } from 'vue3-ace-editor';
 import ace from 'ace-builds';
 
 import modeJavascriptUrl from 'ace-builds/src-noconflict/mode-javascript?url';
@@ -10,9 +11,15 @@ ace.config.setModuleUrl('ace/mode/javascript', modeJavascriptUrl);
 
 import themeMonokaiUrl from 'ace-builds/src-noconflict/theme-monokai?url';
 import editorHelper from "../js/editorHelper";
-ace.config.setModuleUrl('ace/theme/monokai', themeMonokaiUrl);
+ace.config.setModuleUrl('ace/theme/monokai', themeMonokaiUrl);*/
+import Codemirror from "codemirror-editor-vue3";
+//mode
+import "codemirror/mode/javascript/javascript.js";
+// theme
+import "codemirror/theme/dracula.css";
 
 const codeStore = useCodeStore(pinia);
+
 function deployWorkerToCloudeflare() {
     console.log("in theeditor deployWorkerToCloudeflare");
     editorAPI.deployWorkerToCloudeflare().then((data) => {
@@ -52,9 +59,12 @@ function newFile() {
     <button @click="previewApp">Preview App</button>
     <input v-model="codeStore.name" placeholder="Type File Name" :disabled="codeStore.nameDisabled" />
     <!--<textarea v-model="codeStore.code"></textarea>-->
-    <VAceEditor
+    <!--<VAceEditor
     v-model:value="codeStore.code"
     @init="editorInit"
     lang="javascript"
-    theme="monokai"/>
+    theme="monokai"/>-->
+    <Codemirror
+    v-model:value="codeStore.code"
+    :options="codeStore.editorOptions"/>
 </template>

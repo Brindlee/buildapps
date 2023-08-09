@@ -8,8 +8,14 @@ export const useCodeStore = defineStore('codeStore', () => {
   const nameDisabled = ref(false);
   const fileExplorerRerenderKey = ref(0);
   const openFiles = ref([]);
+  const displayMenuDetailsModal = ref(false);
+  const addToMenuDetails = ref({});
+  const editorOptions = ref({ mode : {
+    name: "javascript",
+    json: true
+  }, theme : "dracula", border : false });
   function setCode(codeStr) {
     code.value = codeStr;
   }
-  return { code, setCode, name, selectedObject, nameDisabled, fileExplorerRerenderKey, openFiles }
+  return { code, setCode, name, selectedObject, nameDisabled, fileExplorerRerenderKey, openFiles, editorOptions, displayMenuDetailsModal, addToMenuDetails }
 })

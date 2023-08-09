@@ -102,29 +102,24 @@ export default {
                 let keyArr = key.split('/');
                 if( keyArr.length > 1 ) {
                     let fname = keyArr[keyArr.length-1];
-                    let routeIdx = _.findIndex(routes, function(route) { return route.fileUrl.includes( fname ) });
-                    console.log( 'routeIdx: ', routeIdx );
-                    if( routeIdx == -1 ) {
-                        let fnameWithoutExt = fname.split('.')[0];
-                        let routeObj = {
-                            title : fnameWithoutExt,
-                            fileUrl : './files/'+fname,
-                            name : fnameWithoutExt,
-                            path : '/'+fnameWithoutExt,
-                            componentName : ''
-                        }
-                        routes.push( routeObj );
-                        let routesStr = JSON.stringify( routes );
-                        //save routes
-                        editorAPI.saveFileToR2WithKey( 'vuestandaloneapp/routeconfig.json', routesStr ).then( function( saveResp ) {
-                            console.log('save routes resp: ', saveResp);
-                            alert( 'Menu added in config at last. You will have to update componentName in it with your vue component variable. Also check path.' )
-                            self.getR2ObjectData( 'vuestandaloneapp/routeconfig.json' );
-                        } );
-                        
-                    } else {
-                        alert('Menu already exist in config');
+                    
+                    let fnameWithoutExt = fname.split('.')[0];
+                    let routeObj = {
+                        title : data.menuDetails.title,
+                        fileUrl : './files/'+fname,
+                        name : fnameWithoutExt,
+                        path : data.menuDetails.path,
+                        componentName : data.menuDetails.componentName
                     }
+                    routes.push( routeObj );
+                    let routesStr = JSON.stringify( routes );
+                    //save routes
+                    editorAPI.saveFileToR2WithKey( 'vuestandaloneapp/routeconfig.json', routesStr ).then( function( saveResp ) {
+                        console.log('save routes resp: ', saveResp);
+                        self.getR2ObjectData( 'vuestandaloneapp/routeconfig.json' );
+                        codeStore.displayMenuDetailsModal = false;
+                        alert( 'Menu added in config.' );
+                    } );
                 }
                 
             });
