@@ -46,8 +46,9 @@ function pushMessage(msg) {
       loaderStore.hideLoader()
       if (typeof data.choices != 'undefined' && data.choices.length > 0) {
         let respMessage = data.choices[0].message
-        respMessage.type = 'text'
-        msgStore.pushMessage(respMessage)
+        /*.respMessage.type = 'text'
+        msgStore.pushMessage(respMessage)*/
+
         codeStore.setCode(respMessage.content)
         codeStore.name = ''
         codeStore.nameDisabled = false

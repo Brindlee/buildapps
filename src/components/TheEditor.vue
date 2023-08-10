@@ -2,6 +2,7 @@
 import pinia from "@/stores/store.js";
 import {useCodeStore} from '@/stores/code'
 import editorAPI from '@/js/editorAPI.js'
+import editorHelper from '@/js/editorHelper.js'
 import {ref} from 'vue'
 /*import { VAceEditor } from 'vue3-ace-editor';
 import ace from 'ace-builds';
